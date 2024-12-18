@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">UserList</string>
+    <string name="text_user_list">Каталог пользователей</string>
+    <string name="text_name">Имя:</string>
+    <string name="text_input_name">Введите имя</string>
+    <string name="text_age">Возраст</string>
+    <string name="text_input_age">Введите возраст</string>
+    <string name="text_save">Сохранить</string>
+    <string name="text_exit">Выход</string>
 </resources>
