@@ -1,6 +1,5 @@
 package ru.borisov.userlist
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -58,9 +57,7 @@ class MainActivity : AppCompatActivity() {
                 println(userList)
             }
         }
-        userListLV.setOnItemClickListener { _, _, position, _ ->
-            adapter.remove(userList[position])
-        }
+        userListLV.onItemClickListener = MyDialog.createDialog(this, adapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
