@@ -11,18 +11,22 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
-    val userList: MutableList<User> = mutableListOf()
+    private val userList: MutableList<User> = mutableListOf()
     lateinit var nameET: EditText
     lateinit var ageET: EditText
     lateinit var saveBTN: Button
     lateinit var userListLV: ListView
-    lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    lateinit var toolbar: Toolbar
+    lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         nameET = findViewById(R.id.nameET)
         ageET = findViewById(R.id.ageET)
         saveBTN = findViewById(R.id.saveBTN)
@@ -44,17 +48,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
         userListLV.adapter = adapter
+        userViewModel.userList.observe(this) { list ->
+            list?.let {
+                userList.clear()
+                userList.addAll(it)
+                adapter.notifyDataSetChanged()
+            }
+        }
         saveBTN.setOnClickListener {
             if (nameET.text.isNotEmpty() && ageET.text.isNotEmpty()) {
                 val name = nameET.text.toString()
                 val age = ageET.text.toString().toInt()
-                println(userList.add(User(name, age)))
-
+                val list = userViewModel.userList.value?.toMutableList() ?: mutableListOf()
+                list.add(User(name, age))
+                userViewModel.userList.value = list
                 nameET.text.clear()
                 ageET.text.clear()
-                adapter.notifyDataSetInvalidated()
-                adapter.notifyDataSetChanged()
-                println(userList)
             }
         }
         userListLV.onItemClickListener = MyDialog.createDialog(this, adapter)
